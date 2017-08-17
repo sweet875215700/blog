@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="#背景随着项目的深入，项目变得越来越大。为了应对更加复杂的业务和提高迭代速度。所以对项目进行了一次拆分，由此产生了我们需要在同一台服务器上要部署多个项目，为了保持项目与项目之间的独立性，我们打算使用docker对项目进行隔离 #Docker 是什么？ 这是Docker的logo图，直观上看是一只鲸鱼拖着好多箱子在海上游走。那么在深入的思考下，对应到我们现实生活中不就是一只货船载着许多集装箱么。现实">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker 自动化运维实践">
+<meta property="og:url" content="http://yoursite.com/2017/08/17/Docker-自动化运维实践/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="#背景随着项目的深入，项目变得越来越大。为了应对更加复杂的业务和提高迭代速度。所以对项目进行了一次拆分，由此产生了我们需要在同一台服务器上要部署多个项目，为了保持项目与项目之间的独立性，我们打算使用docker对项目进行隔离 #Docker 是什么？ 这是Docker的logo图，直观上看是一只鲸鱼拖着好多箱子在海上游走。那么在深入的思考下，对应到我们现实生活中不就是一只货船载着许多集装箱么。现实">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/4791533-3bc9b145fab45a68.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/4791533-14ef9dfb00ca2eea.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/4791533-e59e15b497e27234.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/4791533-5d8c1e1ef488d3a8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-08-17T12:06:23.874Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Docker 自动化运维实践">
+<meta name="twitter:description" content="#背景随着项目的深入，项目变得越来越大。为了应对更加复杂的业务和提高迭代速度。所以对项目进行了一次拆分，由此产生了我们需要在同一台服务器上要部署多个项目，为了保持项目与项目之间的独立性，我们打算使用docker对项目进行隔离 #Docker 是什么？ 这是Docker的logo图，直观上看是一只鲸鱼拖着好多箱子在海上游走。那么在深入的思考下，对应到我们现实生活中不就是一只货船载着许多集装箱么。现实">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/4791533-3bc9b145fab45a68.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/08/17/Docker-自动化运维实践/"/>
+
+
+
+
+
+  <title>Docker 自动化运维实践 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/17/Docker-自动化运维实践/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Docker 自动化运维实践</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-17T20:06:04+08:00">
+                2017-08-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>#背景<br>随着项目的深入，项目变得越来越大。为了应对更加复杂的业务和提高迭代速度。所以对项目进行了一次拆分，由此产生了我们需要在同一台服务器上要部署多个项目，为了保持项目与项目之间的独立性，我们打算使用docker对项目进行隔离</p>
+<p>#Docker 是什么？</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/4791533-3bc9b145fab45a68.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"><br>这是Docker的logo图，直观上看是一只鲸鱼拖着好多箱子在海上游走。那么在深入的思考下，对应到我们现实生活中不就是一只货船载着许多集装箱么。现实生活中集装箱解决了什么问题？在一艘大船上，可以把货物规整的摆放起来。并且各种各样的货物被集装箱标准化了，集装箱和集装箱之间不会互相影响。那么我就不需要专门运送水果的船和专门运送化学品的船了。只要这些货物在集装箱里封装的好好的，那我就可以用一艘大船把他们都运走。</p>
+<p>这也就是Docker的核心思想“集装箱思想”。</p>
+<p>#Docker 能做什么？<br>1.不同的应用程序可能会有不同的应用环境，比如.net开发的网站和php开发的网站依赖的软件就不一样，如果把他们依赖的软件都安装在一个服务器上就要调试很久，而且很麻烦，还会造成一些冲突。比如IIS和Apache访问端口冲突。这个时候你就要隔离.net开发的网站和php开发的网站。常规来讲，我们可以在服务器上创建不同的虚拟机在不同的虚拟机上放置不同的应用，但是虚拟机开销比较高。docker可以实现虚拟机隔离应用环境的功能，并且开销比虚拟机小，小就意味着省钱了。</p>
+<p>2.你开发软件的时候用的是Ubuntu，但是运维管理的都是centos，运维在把你的软件从开发环境转移到生产环境的时候就会遇到一些Ubuntu转centos的问题，比如：有个特殊版本的数据库，只有Ubuntu支持，centos不支持，在转移的过程当中运维就得想办法解决这样的问题。这时候要是有docker你就可以把开发环境直接封装转移给运维，运维直接部署你给他的docker就可以了。而且部署速度快。</p>
+<p>3.在服务器负载方面，如果你单独开一个虚拟机，那么虚拟机会占用空闲内存的，docker部署的话，这些内存就会利用起来。</p>
+<p>#Docker vs 虚拟机<br>上文中我们多次提到了虚拟机,相信大家对虚拟机也有一定的了解，也有的人这样说:<em>“在一个机器上运行成百上千个虚拟机不可能，但运行成百上千个容器已经实现”</em>。那么，虚拟机和Docker的不同点是什么呢？</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/4791533-14ef9dfb00ca2eea.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"><br>比较两图的差异，左图虚拟机的Guest OS层和Hypervisor层在docker中被Docker Engine层所替代。虚拟机的Guest OS即为虚拟机安装的操作系统，它是一个完整操作系统内核；虚拟机的Hypervisor层可以简单理解为一个硬件虚拟化平台，它在Host OS是以内核态的驱动存在的。</p>
+<p>虚拟机实现资源隔离的方法是利用独立的OS，并利用Hypervisor虚拟化CPU、内存、IO设备等实现的。例如，为了虚拟CPU，Hypervisor会为每个虚拟的CPU创建一个数据结构，模拟CPU的全部寄存器的值，在适当的时候跟踪并修改这些值。需要指出的是在大多数情况下，虚拟机软件代码是直接跑在硬件上的，而不需要Hypervisor介入。只有在一些权限高的请求下，Guest OS需要运行内核态修改CPU的寄存器数据，Hypervisor会介入，修改并维护虚拟的CPU状态。</p>
+<p>对比虚拟机实现资源和环境隔离的方案，docker就显得简练很多。docker Engine可以简单看成对Linux的NameSpace、Cgroup、镜像管理文件系统操作的封装。docker并没有和虚拟机一样利用一个完全独立的Guest OS实现环境隔离，它利用的是目前Linux内核本身支持的容器方式实现资源和环境隔离。简单的说，docker利用namespace实现系统环境的隔离；利用Cgroup实现资源限制；利用镜像实现根目录环境的隔离。</p>
+<p>#Docker 实践</p>
+<p>我们一我们拆分出来的搜索服务为例，来让读者更加了解Docker的使用</p>
+<p>###1、Docker 安装<br>读者可以阅读官方的安装文档，但是笔者认为这些操作有些繁琐，读者可以使用如下命令进行安装<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">curl -sSL http://acs-public-mirror.oss-cn-hangzhou.aliyuncs.com/docker-engine/internet | sh -</div></pre></td></tr></table></figure></p>
+<p>验证下是否安装成功<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker -v</div></pre></td></tr></table></figure></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/4791533-e59e15b497e27234.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"></p>
+<p>###2、Docker 相关概念</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/4791533-5d8c1e1ef488d3a8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Paste_Image.png"></p>
+<p>1、Docker daemon 接受并处理Docker Client发送的请求，它是运行在宿主机上的系统进程</p>
+<p>2、Docker client Docker的用户接口，用户通过执行 docker 命令操作 daemon</p>
+<p>3、Docker镜像是一个只读的模板。举个例子，一个镜像可以包含一个运行在Apache上的Web应用和其使用的Ubuntu操作系统。</p>
+<p>4、Docker仓库用来保存镜像。可以理解为代码控制中的代码仓库。</p>
+<p>5、Docker容器和文件夹很类似。一个Docker容器包含了所有的某个应用运行所需要的环境。每一个Docker容器都是从Docker镜像创建的</p>
+<p>###3、创建Dockerfile<br>我们先创建一个带有java环境的干净的系统，让它作为我们的base 镜像，之后我们镜像都去继承这个base镜像</p>
+<p>base Dockerfile<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line">#</div><div class="line"># MAINTAINER        shiwei &lt;shiwei@fitcare.me&gt;</div><div class="line"># DOCKER-VERSION    17.03.0-ce</div><div class="line">#</div><div class="line"># Dockerizing ubuntu: Dockerfile for building ubuntu images</div><div class="line">#</div><div class="line"></div><div class="line">FROM ubuntu:latest</div><div class="line">MAINTAINER shiwei</div><div class="line">ENV TZ &quot;Asia/Shanghai&quot;</div><div class="line">ENV TERM xterm</div><div class="line"></div><div class="line">ADD sources.list /etc/apt/sources.list</div><div class="line"></div><div class="line"># Install.</div><div class="line">RUN \</div><div class="line">  apt-get update &amp;&amp; \</div><div class="line">  apt-get -y upgrade &amp;&amp; \</div><div class="line">  apt-get install -y build-essential &amp;&amp; \</div><div class="line">  apt-get install -y software-properties-common &amp;&amp; \</div><div class="line">  apt-get install -y byobu curl git htop  unzip vim wget &amp;&amp; \</div><div class="line">  rm -rf /var/lib/apt/lists/*</div><div class="line"></div><div class="line"># java file</div><div class="line">RUN mkdir /home/software/</div><div class="line">COPY jdk-7u80-linux-x64.tar.gz /home/software/</div><div class="line"></div><div class="line"></div><div class="line">WORKDIR /home/software/</div><div class="line">RUN tar -zxf jdk-7u80-linux-x64.tar.gz</div><div class="line"></div><div class="line">#加密解密包</div><div class="line">COPY local_policy.jar /home/software/jdk1.7.0_80/jre/lib/security/</div><div class="line">COPY US_export_policy.jar /home/software/jdk1.7.0_80/jre/lib/security/</div><div class="line"></div><div class="line">#WORKDIR /home/software/jdk1.7.0_80/</div><div class="line"></div><div class="line">RUN update-alternatives --install /usr/bin/javac javac /home/software/jdk1.7.0_80/bin/javac 100</div><div class="line">RUN update-alternatives --install /usr/bin/java java /home/software/jdk1.7.0_80/bin/java 100</div><div class="line">RUN update-alternatives --display java</div><div class="line">RUN java -version</div><div class="line">RUN rm -rf jdk-7u80-linux-x64.tar.gz</div><div class="line"></div><div class="line"># expose port</div><div class="line">EXPOSE 22</div><div class="line"></div><div class="line"># Define default command.</div><div class="line">CMD [&quot;bash&quot;]</div></pre></td></tr></table></figure></p>
+<p>搜索项目的镜像<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">#</div><div class="line"># MAINTAINER        shiwei &lt;shiwei@fitcare.me&gt;</div><div class="line"># DOCKER-VERSION    17.03.0-ce</div><div class="line">#</div><div class="line"># Dockerizing ubuntu: Dockerfile for building resin images</div><div class="line">#</div><div class="line"></div><div class="line">FROM base:latest</div><div class="line">MAINTAINER shiwei</div><div class="line"></div><div class="line">#create dir</div><div class="line">RUN mkdir /home/app/log -p</div><div class="line">RUN mkdir /home/app/workspace/searchit -p</div><div class="line"></div><div class="line">#resin</div><div class="line">COPY resin-4.0.40.tar.gz /home/software/</div><div class="line">WORKDIR /home/software/</div><div class="line">RUN tar -zxf resin-4.0.40.tar.gz</div><div class="line">RUN rm -rf resin-4.0.40.tar.gz</div><div class="line">COPY resin.xml /home/software/resin-4.0.40/conf/</div><div class="line"></div><div class="line">#测试</div><div class="line">COPY index.html /home/app/workspace/searchit</div><div class="line"></div><div class="line"># expose port</div><div class="line">EXPOSE 8080</div><div class="line"></div><div class="line">CMD [&quot;/home/software/resin-4.0.40/bin/resin.sh&quot;, &quot;console&quot;]</div></pre></td></tr></table></figure></p>
+<p>去文件所在目录执行下如下命令，就可以产生镜像了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker build -t searchit .</div></pre></td></tr></table></figure>
+<p>然后运行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">docker run </div><div class="line">--name gym</div><div class="line"> -p 8888:8080 -d </div><div class="line"> -v /home/gym:/home/app/workspace/gym </div><div class="line">--add-host hbbusiness_db_r.hotbody.com:121.42.xx.xx </div><div class="line">--add-host hbbusiness_db_w.hotbody.com:121.42.xx.xx </div><div class="line">--add-host hbbusiness_koubei.hotbody.com:121.42.xx.xx </div><div class="line">--add-host hbbusiness_db_r_f_s.hotbody.com:121.42.xx.xx </div><div class="line">searchit:latest</div></pre></td></tr></table></figure></p>
+<p>但是目前还没有达到我们对资源隔离的目的。那么我们如何对内存和CPU进行隔离呢？</p>
+<p>####1、Docker 资源隔离之CUP####<br>docker 的cpu 控制 整体上来说，都是docker 自带的，而按功能来分的话 ，可以分为：</p>
+<p><em>共享</em>：–cpu-shares， 通过设置对应的权重参数来控制CPU的分配，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">例如 A --cpu-shares 1024  B --cpu-shares 512</div></pre></td></tr></table></figure></p>
+<p> 那么如果都跑满 A 将占有2/3 cpu时间 ，B是 1/3 ,但是 当A不使用时 ，B是能用使用全部的 CPU 资源的</p>
+<p><em>独占</em>：–cpuset-cpus 可以设置容器执行在具体 的 某个或者某几个核上。core 编号 从0 开始</p>
+<p>####2、Docker 资源隔离之内存####<br>设置内存 -m, –memory 如果只 设置这个参数的话， 当容器中程序使用内存超过这个值，则程序死，但是容器不会死</p>
+<p>限制内存 –memory-swap ：如果使用内存超过 设置的值 ，则容器也会被kill</p>
+<p>#Jenkins 自动化#<br>笔者上文陈述这么长的篇幅，但是目前和自动化还未沾边。Docker 并不会帮我们做自动化的部分工作，所以我们需要Jenkins</p>
+<p>Jenkins是一个开源软件项目，旨在提供一个开放易用的软件平台，使软件的持续集成变成可能。</p>
+<p>首先Jenkins并不是必不可少的，使用它笔者主要从以下几个方面考虑：</p>
+<p>1、去除手工操作，这意味着部署项目不需要再登录到服务器了，减少服务器上的操作就提高了安全性，手残执行 rm -rf * 的也是比比皆是，都是血的教训<br>2、提高测试效率 。部署速度快，提交效率<br>3、上线不一定由开发或运维人员完成。<br>4、完善的历史记录和回退功能</p>
+<p>由于本文并不是详细介绍jenkins 的文章，所以不会讲解jenkins如何配置，如果需要请google，只贴出核心脚本<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">docker stop searchit</div><div class="line">docker start searchit</div></pre></td></tr></table></figure></p>
+<p>#存在的问题<br>1、目前这个方案并没有完全实现自动化，如果有一台新的机器，我们需要为其产生镜像，或者执行Dockerfile 或者从我们的私服拉取镜像<br>2、还未有一个分布式的监控方案<br>3、分布式的Docker管理<br>4、日志处理</p>
+<p>最后给大家推荐一本书吧<br>《Docker in Action》</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/17/ElasticSearch-GeoLocation-官方文档翻译之-Geo-Point/" rel="next" title="ElasticSearch GeoLocation 官方文档翻译之 Geo Point">
+                <i class="fa fa-chevron-left"></i> ElasticSearch GeoLocation 官方文档翻译之 Geo Point
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="John Doe" />
+          <p class="site-author-name" itemprop="name">John Doe</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">Artikel</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">
+    Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a>
+  </div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">
+    Theme &mdash;
+    <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+      NexT.Muse
+    </a>
+  </div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

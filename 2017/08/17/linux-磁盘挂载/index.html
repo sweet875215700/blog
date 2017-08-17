@@ -94,16 +94,24 @@
 
 
 
-<meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta name="description" content="1fdisk -l 可以看到 /dev/vdb 有128.8GB可用，但是未被挂载，首先对其进行分区1fdisk /dev/vdb 1输入n 1输入p 1输入w 完成分区工作1fdisk -l  这时候能够看到我们的分区了，接下来格式化分区1mkfs -t ext4 /dev/vdb1  在根目录下新建disk目录，然后将分区挂载到disk目录上 mount /dev/vdb1 /disk  大功">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://yoursite.com/2017/08/17/hello-world/index.html">
+<meta property="og:title" content="linux 磁盘挂载">
+<meta property="og:url" content="http://yoursite.com/2017/08/17/linux-磁盘挂载/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
-<meta property="og:updated_time" content="2017-08-17T08:19:21.726Z">
+<meta property="og:description" content="1fdisk -l 可以看到 /dev/vdb 有128.8GB可用，但是未被挂载，首先对其进行分区1fdisk /dev/vdb 1输入n 1输入p 1输入w 完成分区工作1fdisk -l  这时候能够看到我们的分区了，接下来格式化分区1mkfs -t ext4 /dev/vdb1  在根目录下新建disk目录，然后将分区挂载到disk目录上 mount /dev/vdb1 /disk  大功">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/4791533-40337ba752b8f63a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/600">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/4791533-1f76b68c59cea6db.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/600">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/4791533-70ddc4e6b2ca141c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/600">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/4791533-525e84d8d90da782.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/600">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/4791533-dd9a305a760f49ca.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/600">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/4791533-f2c3763e52f19ef4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/600">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/4791533-349019eefe8be6de.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/600">
+<meta property="og:updated_time" content="2017-08-17T12:01:56.673Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hello World">
-<meta name="twitter:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta name="twitter:title" content="linux 磁盘挂载">
+<meta name="twitter:description" content="1fdisk -l 可以看到 /dev/vdb 有128.8GB可用，但是未被挂载，首先对其进行分区1fdisk /dev/vdb 1输入n 1输入p 1输入w 完成分区工作1fdisk -l  这时候能够看到我们的分区了，接下来格式化分区1mkfs -t ext4 /dev/vdb1  在根目录下新建disk目录，然后将分区挂载到disk目录上 mount /dev/vdb1 /disk  大功">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/4791533-40337ba752b8f63a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/600">
 
 
 
@@ -132,13 +140,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/08/17/hello-world/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/08/17/linux-磁盘挂载/"/>
 
 
 
 
 
-  <title>Hello World | Hexo</title>
+  <title>linux 磁盘挂载 | Hexo</title>
   
 
 
@@ -255,7 +263,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/17/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/17/linux-磁盘挂载/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="John Doe">
@@ -272,7 +280,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Hello World</h1>
+          <h1 class="post-title" itemprop="name headline">linux 磁盘挂载</h1>
         
 
         <div class="post-meta">
@@ -284,7 +292,7 @@
               
                 <span class="post-meta-item-text">Veröffentlicht am</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-17T16:19:21+08:00">
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-17T20:01:40+08:00">
                 2017-08-17
               </time>
             
@@ -322,15 +330,19 @@
       
 
       
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+        <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">fdisk -l</div></pre></td></tr></table></figure>
+<p><img src="http://upload-images.jianshu.io/upload_images/4791533-40337ba752b8f63a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/600" alt="Paste_Image.png"><br>可以看到 /dev/vdb 有128.8GB可用，但是未被挂载，首先对其进行分区<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">fdisk /dev/vdb</div></pre></td></tr></table></figure></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/4791533-1f76b68c59cea6db.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/600" alt="Paste_Image.png"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">输入n</div></pre></td></tr></table></figure></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/4791533-70ddc4e6b2ca141c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/600" alt="Paste_Image.png"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">输入p</div></pre></td></tr></table></figure></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/4791533-525e84d8d90da782.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/600" alt="Paste_Image.png"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">输入w</div></pre></td></tr></table></figure></p>
+<p>完成分区工作<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">fdisk -l</div></pre></td></tr></table></figure></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/4791533-dd9a305a760f49ca.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/600" alt="Paste_Image.png"></p>
+<p>这时候能够看到我们的分区了，接下来格式化分区<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mkfs -t ext4 /dev/vdb1</div></pre></td></tr></table></figure></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/4791533-f2c3763e52f19ef4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/600" alt="Paste_Image.png"></p>
+<p>在根目录下新建disk目录，然后将分区挂载到disk目录上</p>
+<pre><code>mount /dev/vdb1 /disk
+</code></pre><p><img src="http://upload-images.jianshu.io/upload_images/4791533-349019eefe8be6de.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/600" alt="Paste_Image.png"></p>
+<p>大功告成</p>
 
       
     </div>
@@ -355,14 +367,18 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2017/08/17/查找占用cpu最高的线程/" rel="next" title="查找占用cpu最高的线程">
+                <i class="fa fa-chevron-left"></i> 查找占用cpu最高的线程
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/08/17/ElasticSearch-Parent-Child-官方文档翻译/" rel="prev" title="ElasticSearch Parent-Child 官方文档翻译">
-                ElasticSearch Parent-Child 官方文档翻译 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/08/17/从一个监控项目谈Spring-Boot-的简约/" rel="prev" title="从一个监控项目谈Spring Boot 的简约">
+                从一个监控项目谈Spring Boot 的简约 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -415,17 +431,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            Inhaltsverzeichnis
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            Übersicht
-          </li>
-        </ul>
-      
 
-      <section class="site-overview sidebar-panel">
+      <section class="site-overview sidebar-panel sidebar-panel-active">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -469,22 +476,6 @@
 
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-number">1.</span> <span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-number">1.1.</span> <span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run-server"><span class="nav-number">1.2.</span> <span class="nav-text">Run server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate-static-files"><span class="nav-number">1.3.</span> <span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-remote-sites"><span class="nav-number">1.4.</span> <span class="nav-text">Deploy to remote sites</span></a></li></ol></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       

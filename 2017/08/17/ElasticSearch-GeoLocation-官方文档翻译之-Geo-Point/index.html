@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="#Geo PointsGeo-points 就是我们地球的经纬度，它能够用于计算地球两点之间的距离。 Geo-points 不能使用动态mapping，必须提前制定好geo_point类型123456789101112131415PUT /attractions&amp;#123;  &amp;quot;mappings&amp;quot;: &amp;#123;    &amp;quot;restaurant&amp;quot;: &amp;#123">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ElasticSearch GeoLocation 官方文档翻译之 Geo Point">
+<meta property="og:url" content="http://yoursite.com/2017/08/17/ElasticSearch-GeoLocation-官方文档翻译之-Geo-Point/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="#Geo PointsGeo-points 就是我们地球的经纬度，它能够用于计算地球两点之间的距离。 Geo-points 不能使用动态mapping，必须提前制定好geo_point类型123456789101112131415PUT /attractions&amp;#123;  &amp;quot;mappings&amp;quot;: &amp;#123;    &amp;quot;restaurant&amp;quot;: &amp;#123">
+<meta property="og:updated_time" content="2017-08-17T12:03:50.849Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ElasticSearch GeoLocation 官方文档翻译之 Geo Point">
+<meta name="twitter:description" content="#Geo PointsGeo-points 就是我们地球的经纬度，它能够用于计算地球两点之间的距离。 Geo-points 不能使用动态mapping，必须提前制定好geo_point类型123456789101112131415PUT /attractions&amp;#123;  &amp;quot;mappings&amp;quot;: &amp;#123;    &amp;quot;restaurant&amp;quot;: &amp;#123">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/08/17/ElasticSearch-GeoLocation-官方文档翻译之-Geo-Point/"/>
+
+
+
+
+
+  <title>ElasticSearch GeoLocation 官方文档翻译之 Geo Point | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/17/ElasticSearch-GeoLocation-官方文档翻译之-Geo-Point/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ElasticSearch GeoLocation 官方文档翻译之 Geo Point</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-17T20:03:05+08:00">
+                2017-08-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>#Geo Points<br>Geo-points 就是我们地球的经纬度，它能够用于计算地球两点之间的距离。</p>
+<p>Geo-points 不能使用动态mapping，必须提前制定好geo_point类型<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">PUT /attractions</div><div class="line">&#123;</div><div class="line">  &quot;mappings&quot;: &#123;</div><div class="line">    &quot;restaurant&quot;: &#123;</div><div class="line">      &quot;properties&quot;: &#123;</div><div class="line">        &quot;name&quot;: &#123;</div><div class="line">          &quot;type&quot;: &quot;string&quot;</div><div class="line">        &#125;,</div><div class="line">        &quot;location&quot;: &#123;</div><div class="line">          &quot;type&quot;: &quot;geo_point&quot;</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>####Lat/Lon Formats</p>
+<p>假设我们把 location 字段定义为geo_point 类型，我们创建文档的时候应该包含一对 latitude/longitude ，可以是 string ，arrays 或者 objects<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">PUT /attractions/restaurant/1</div><div class="line">&#123;</div><div class="line">  &quot;name&quot;:     &quot;Chipotle Mexican Grill&quot;,</div><div class="line">  &quot;location&quot;: &quot;40.715, -74.011&quot; </div><div class="line">&#125;</div><div class="line"></div><div class="line">PUT /attractions/restaurant/2</div><div class="line">&#123;</div><div class="line">  &quot;name&quot;:     &quot;Pala Pizza&quot;,</div><div class="line">  &quot;location&quot;: &#123; </div><div class="line">    &quot;lat&quot;:     40.722,</div><div class="line">    &quot;lon&quot;:    -73.989</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">PUT /attractions/restaurant/3</div><div class="line">&#123;</div><div class="line">  &quot;name&quot;:     &quot;Mini Munchies Pizza&quot;,</div><div class="line">  &quot;location&quot;: [ -73.983, 40.719 ] </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>###注意：<br>latitude/longitude  在每种类型的顺序是不一样的，在字符串中是”latitude,longitude”，但是在数组中应为[longitude,latitude]，</p>
+<p>以前，字符串和数组中的经纬度顺序是一致的，但是为了和GeoJSON保持一致，所以讲数组的经纬度顺序颠倒了。</p>
+<p>###Filtering by Geo Point<br>四种geo-point filters 可以帮助我们去过滤数据，当我们使用geolocation时。</p>
+<p>geo_bounding_box：<br>  找出落在一个指定的长方形中的geo-points<br>geo_distance：<br>找出以一个点为中心，一个指定半径范围内的geo-points<br>geo_distance_range：<br>找出以一个点为中心，设置一个最小半径和一个最大半径，在这个之间的geo-points<br>geo_polygon：<br>找出落在一个多边形范围内的geo-points，这个代价是相当昂贵的，如果你有这样的需求，建议使用 <a href="https://www.elastic.co/guide/en/elasticsearch/guide/current/geo-shapes.html" target="_blank" rel="external">geo-shapes</a></p>
+<p>每种filter的计算一个点是否落到一个区域的方式有些不同，但过程都是相似的。<br>所请求的区域被转换为quad/geohash前缀标记的范围，然后去倒排索引中搜索具有相同标记的文档。</p>
+<p>###建议：<br>Geo-filters 是相当耗费性能的，它适合用于在文档数量较少的时候。首先，你应该利用其它filter先过滤掉一部分数据。</p>
+<p>#Geo Bounding Box Filter</p>
+<p>它是到目前为止最有效率的filter，因为他的计算非常简单。你只需提供上、下、左、右四个坐标，剩下的就是他会比较longitude 是否在左右坐标内，latitude 是否在上下坐标内<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">GET /attractions/restaurant/_search</div><div class="line">&#123;</div><div class="line">  &quot;query&quot;: &#123;</div><div class="line">    &quot;filtered&quot;: &#123;</div><div class="line">      &quot;filter&quot;: &#123;</div><div class="line">        &quot;geo_bounding_box&quot;: &#123;</div><div class="line">          &quot;location&quot;: &#123; </div><div class="line">            &quot;top_left&quot;: &#123;</div><div class="line">              &quot;lat&quot;:  40.8,</div><div class="line">              &quot;lon&quot;: -74.0</div><div class="line">            &#125;,</div><div class="line">            &quot;bottom_right&quot;: &#123;</div><div class="line">              &quot;lat&quot;:  40.7,</div><div class="line">              &quot;lon&quot;: -73.0</div><div class="line">            &#125;</div><div class="line">          &#125;</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>#Optimizing Bounding Boxes</p>
+<p>geo_bounding_box 是不需要将所有的geo-points都加载到内存的。因为它需要做的就是检查the lat and lon 是否落到了一个指定的区域。它可以用倒排索引去做个一次过滤。</p>
+<p>为了使用这种优化，我们必须指定geo_point 的映射,设置 “lat_lon”: true<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">PUT /attractions</div><div class="line">&#123;</div><div class="line">  &quot;mappings&quot;: &#123;</div><div class="line">    &quot;restaurant&quot;: &#123;</div><div class="line">      &quot;properties&quot;: &#123;</div><div class="line">        &quot;name&quot;: &#123;</div><div class="line">          &quot;type&quot;: &quot;string&quot;</div><div class="line">        &#125;,</div><div class="line">        &quot;location&quot;: &#123;</div><div class="line">          &quot;type&quot;:    &quot;geo_point&quot;,</div><div class="line">          &quot;lat_lon&quot;: true </div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>现在，当你执行下面的查询时，我们会告诉elasticsearch使用lat 和lon的索引</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">GET /attractions/restaurant/_search</div><div class="line">&#123;</div><div class="line">  &quot;query&quot;: &#123;</div><div class="line">    &quot;filtered&quot;: &#123;</div><div class="line">      &quot;filter&quot;: &#123;</div><div class="line">        &quot;geo_bounding_box&quot;: &#123;</div><div class="line">          &quot;type&quot;:    &quot;indexed&quot;, </div><div class="line">          &quot;location&quot;: &#123;</div><div class="line">            &quot;top_left&quot;: &#123;</div><div class="line">              &quot;lat&quot;:  40.8,</div><div class="line">              &quot;lon&quot;: -74.0</div><div class="line">            &#125;,</div><div class="line">            &quot;bottom_right&quot;: &#123;</div><div class="line">              &quot;lat&quot;:  40.7,</div><div class="line">              &quot;lon&quot;:  -73.0</div><div class="line">            &#125;</div><div class="line">          &#125;</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>#Geo Distance Filter</p>
+<p>geo_distance 这个过滤器会画个圆，来找到在这个落在这个圆内所有的文档</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">GET /attractions/restaurant/_search</div><div class="line">&#123;</div><div class="line">  &quot;query&quot;: &#123;</div><div class="line">    &quot;filtered&quot;: &#123;</div><div class="line">      &quot;filter&quot;: &#123;</div><div class="line">        &quot;geo_distance&quot;: &#123;</div><div class="line">          &quot;distance&quot;: &quot;1km&quot;, </div><div class="line">          &quot;location&quot;: &#123; </div><div class="line">            &quot;lat&quot;:  40.715,</div><div class="line">            &quot;lon&quot;: -73.988</div><div class="line">          &#125;</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>geo-distance 的搜索是相当耗费性能的，为了优化，elasticsearch会首先会画一个内切于圆的正方形。然后用bounding-box filter 过滤掉一部分数据。然后在执行geo-distance filter去找到那些落在圆内的数据。</p>
+<p>#Faster Geo-Distance Calculations</p>
+<p>两点之间的距离可以利用一个牺牲性能来提高精度的算法去计算</p>
+<p>arc：<br>最慢但是精度最高的就是arc 了，一个把地球看成一个球体，但是精度还是有限的，因为实际上地球并不是一个真正的球体<br>plane：<br>plane 算法把地球看成扁平的。它很快但是精度低。在赤道精度最高。<br>sloppy_arc：<br>这么称呼他是因为这个算法是粗滤的计算。</p>
+<p>在查询的时候，你可以和下面一样，指定一个算法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">GET /attractions/restaurant/_search</div><div class="line">&#123;</div><div class="line">  &quot;query&quot;: &#123;</div><div class="line">    &quot;filtered&quot;: &#123;</div><div class="line">      &quot;filter&quot;: &#123;</div><div class="line">        &quot;geo_distance&quot;: &#123;</div><div class="line">          &quot;distance&quot;:      &quot;1km&quot;,</div><div class="line">          &quot;distance_type&quot;: &quot;plane&quot;, </div><div class="line">          &quot;location&quot;: &#123;</div><div class="line">            &quot;lat&quot;:  40.715,</div><div class="line">            &quot;lon&quot;: -73.988</div><div class="line">          &#125;</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>#geo_distance_range Filter</p>
+<p>geo_distance 和 geo_distance_range 的唯一区别是，geo_distance_range是一个圆环。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">GET /attractions/restaurant/_search</div><div class="line">&#123;</div><div class="line">  &quot;query&quot;: &#123;</div><div class="line">    &quot;filtered&quot;: &#123;</div><div class="line">      &quot;filter&quot;: &#123;</div><div class="line">        &quot;geo_distance_range&quot;: &#123;</div><div class="line">          &quot;gte&quot;:    &quot;1km&quot;, </div><div class="line">          &quot;lt&quot;:     &quot;2km&quot;, </div><div class="line">          &quot;location&quot;: &#123;</div><div class="line">            &quot;lat&quot;:  40.715,</div><div class="line">            &quot;lon&quot;: -73.988</div><div class="line">          &#125;</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>#Sorting by Distance</p>
+<p>查询结果是可以跟到一个点的距离排序的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">GET /attractions/restaurant/_search</div><div class="line">&#123;</div><div class="line">  &quot;query&quot;: &#123;</div><div class="line">    &quot;filtered&quot;: &#123;</div><div class="line">      &quot;filter&quot;: &#123;</div><div class="line">        &quot;geo_bounding_box&quot;: &#123;</div><div class="line">          &quot;type&quot;:       &quot;indexed&quot;,</div><div class="line">          &quot;location&quot;: &#123;</div><div class="line">            &quot;top_left&quot;: &#123;</div><div class="line">              &quot;lat&quot;:  40.8,</div><div class="line">              &quot;lon&quot;: -74.0</div><div class="line">            &#125;,</div><div class="line">            &quot;bottom_right&quot;: &#123;</div><div class="line">              &quot;lat&quot;:  40.4,</div><div class="line">              &quot;lon&quot;: -73.0</div><div class="line">            &#125;</div><div class="line">          &#125;</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;,</div><div class="line">  &quot;sort&quot;: [</div><div class="line">    &#123;</div><div class="line">      &quot;_geo_distance&quot;: &#123;</div><div class="line">        &quot;location&quot;: &#123; </div><div class="line">          &quot;lat&quot;:  40.715,</div><div class="line">          &quot;lon&quot;: -73.998</div><div class="line">        &#125;,</div><div class="line">        &quot;order&quot;:         &quot;asc&quot;,</div><div class="line">        &quot;unit&quot;:          &quot;km&quot;, </div><div class="line">        &quot;distance_type&quot;: &quot;plane&quot; </div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  ]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>你可以问问你自己，为什么要指定距离单位，排序？这不取决于我们用米、千米而产生不同的结果。真是的原因是排序的时候会返回结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">  &quot;hits&quot;: [</div><div class="line">     &#123;</div><div class="line">        &quot;_index&quot;: &quot;attractions&quot;,</div><div class="line">        &quot;_type&quot;: &quot;restaurant&quot;,</div><div class="line">        &quot;_id&quot;: &quot;2&quot;,</div><div class="line">        &quot;_score&quot;: null,</div><div class="line">        &quot;_source&quot;: &#123;</div><div class="line">           &quot;name&quot;: &quot;New Malaysia&quot;,</div><div class="line">           &quot;location&quot;: &#123;</div><div class="line">              &quot;lat&quot;: 40.715,</div><div class="line">              &quot;lon&quot;: -73.997</div><div class="line">           &#125;</div><div class="line">        &#125;,</div><div class="line">        &quot;sort&quot;: [</div><div class="line">           0.08425653647614346 </div><div class="line">        ]</div><div class="line">     &#125;,</div><div class="line">...</div></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/17/从一个监控项目谈Spring-Boot-的简约/" rel="next" title="从一个监控项目谈Spring Boot 的简约">
+                <i class="fa fa-chevron-left"></i> 从一个监控项目谈Spring Boot 的简约
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/17/Docker-自动化运维实践/" rel="prev" title="Docker 自动化运维实践">
+                Docker 自动化运维实践 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="John Doe" />
+          <p class="site-author-name" itemprop="name">John Doe</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">Artikel</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">
+    Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a>
+  </div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">
+    Theme &mdash;
+    <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+      NexT.Muse
+    </a>
+  </div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

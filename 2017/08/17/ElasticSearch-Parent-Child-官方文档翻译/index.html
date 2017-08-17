@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="Parent-Child RelationShip ElasticSearch 中的Parent-Child关系和nested模型是相似的， 两个都可以用于复杂的数据结构中，区别是 nested 类型的文档是把所有的实体聚合到一个文档中而Parent-Child现对于比较独立，每个实体即为一个文档Parent-Child 优点1、父文档更新时不用重新为子文档建立索引2、子文档的增加、修改、删除是对">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ElasticSearch Parent-Child 官方文档翻译">
+<meta property="og:url" content="http://yoursite.com/2017/08/17/ElasticSearch-Parent-Child-官方文档翻译/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Parent-Child RelationShip ElasticSearch 中的Parent-Child关系和nested模型是相似的， 两个都可以用于复杂的数据结构中，区别是 nested 类型的文档是把所有的实体聚合到一个文档中而Parent-Child现对于比较独立，每个实体即为一个文档Parent-Child 优点1、父文档更新时不用重新为子文档建立索引2、子文档的增加、修改、删除是对">
+<meta property="og:updated_time" content="2017-08-17T11:58:19.680Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ElasticSearch Parent-Child 官方文档翻译">
+<meta name="twitter:description" content="Parent-Child RelationShip ElasticSearch 中的Parent-Child关系和nested模型是相似的， 两个都可以用于复杂的数据结构中，区别是 nested 类型的文档是把所有的实体聚合到一个文档中而Parent-Child现对于比较独立，每个实体即为一个文档Parent-Child 优点1、父文档更新时不用重新为子文档建立索引2、子文档的增加、修改、删除是对">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/08/17/ElasticSearch-Parent-Child-官方文档翻译/"/>
+
+
+
+
+
+  <title>ElasticSearch Parent-Child 官方文档翻译 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Startseite
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/17/ElasticSearch-Parent-Child-官方文档翻译/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ElasticSearch Parent-Child 官方文档翻译</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-08-17T19:57:54+08:00">
+                2017-08-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Parent-Child-RelationShip"><a href="#Parent-Child-RelationShip" class="headerlink" title="Parent-Child RelationShip"></a>Parent-Child RelationShip</h1><p> ElasticSearch 中的Parent-Child关系和nested模型是相似的， 两个都可以用于复杂的数据结构中，区别是 nested 类型的文档是把所有的实体聚合到一个文档中而Parent-Child现对于比较独立，每个实体即为一个文档<br>Parent-Child 优点<br>1、父文档更新时不用重新为子文档建立索引<br>2、子文档的增加、修改、删除是对父文档和其他子文档没有任何影响的，这非常适用于子文档非常大并且跟新频繁的场景<br>3、子文档也可以查询结果返回<br>ElasticSearch 内部维护一个map来保存Parent-Child之间的关系，正是由于这个map，所以关联查询能够做到响应速度很快，但是确实有个限制是Parent 文档和所有的Child 文档都必须保存到同一个shard中<br>ElasticSearch parent-child ID的映射是存到Doc value 中的，有足够的内存时响 应是很快的。当这个map很大的时候，还是有要有一部分存储在硬盘中的。</p>
+<p>##<a href="https://www.elastic.co/guide/en/elasticsearch/guide/2.x/parent-child-mapping.html#parent-child-mapping" target="_blank" rel="external"></a>Parent-Child Mapping<br>为了建立Parent-Child 模型我们需要在创建mapping的时候指定父文档和子文档或者在子文档创建之前利用update-index API 来指定<br>例如：我们有个公司，其子公司分布在全国各地，我要分析员工和子公司的关系<br>我们使用Parent-Child 机构<br>我们需要建立employee type 和 branch type 并且指定 branch 为_parent<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">PUT /company</div><div class="line">&#123;</div><div class="line">   &quot;mappings&quot;: &#123;</div><div class="line">        &quot;branch&quot;: &#123;&#125;,</div><div class="line">         &quot;employee&quot;: &#123;</div><div class="line">             &quot;_parent&quot;: &#123;</div><div class="line">                      &quot;type&quot;: &quot;branch&quot;</div><div class="line">              &#125;</div><div class="line">         &#125;</div><div class="line">     &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>#Indexing Parents and Children<br>创建父索引和创建其他索引并没有区别，父文档并不需要知道他们的子文档<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">POST /company/branch/_bulk</div><div class="line">&#123; &quot;index&quot;: &#123; &quot;_id&quot;: &quot;london&quot; &#125;&#125;</div><div class="line">&#123; &quot;name&quot;: &quot;London Westminster&quot;, &quot;city&quot;: &quot;London&quot;, &quot;country&quot;: &quot;UK&quot; &#125;</div><div class="line">&#123; &quot;index&quot;: &#123; &quot;_id&quot;: &quot;liverpool&quot; &#125;&#125;</div><div class="line">&#123; &quot;name&quot;: &quot;Liverpool Central&quot;, &quot;city&quot;: &quot;Liverpool&quot;, &quot;country&quot;: &quot;UK&quot; &#125;</div><div class="line">&#123; &quot;index&quot;: &#123; &quot;_id&quot;: &quot;paris&quot; &#125;&#125;</div><div class="line">&#123; &quot;name&quot;: &quot;Champs Élysées&quot;, &quot;city&quot;: &quot;Paris&quot;, &quot;country&quot;: &quot;France&quot; &#125;</div></pre></td></tr></table></figure></p>
+<p>创建子文档的时候你必须指出他们的父文档的id<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">PUT /company/employee/1?parent=london </div><div class="line">&#123;</div><div class="line">  &quot;name&quot;:  &quot;Alice Smith&quot;,</div><div class="line">  &quot;dob&quot;:   &quot;1970-10-24&quot;,</div><div class="line">  &quot;hobby&quot;: &quot;hiking&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>指定parent id 有两个目的：他是父文档和子文档的关联，而且他也保证了父文档和子文档会存储在同一个shard中，<br>在routing那个章节我们解释了ElasticSearch 如何利用routing的值来决定分配到shard中的，如果文档没有指定routing的值的化，那么默认为_id,公式为<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">shard = hash(routing) % number_of_primary_shards</div></pre></td></tr></table></figure></p>
+<p>但是，如果指定了 parent id 那么routing的值就不是_id 了 而是 parent id，换句话说就是父文档和子文档是具有相同的routing的值来确保他们会分配到同一个shard中的<br>当我们用GET请求来检索子文档时，我们需要指定parent id，并且创建索引、更新索引、还有删除索引都需要指定parent id，不像搜索的请求，他会分发到所有的shard中，这些single-document请求只会发送到存储它的shard中。如果没有指定parent id 也许请求会发送到一个错误的shard中<br>当我们使用buk API 时也需要指定parent id<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">POST /company/employee/_bulk</div><div class="line">&#123; &quot;index&quot;: &#123; &quot;_id&quot;: 2, &quot;parent&quot;: &quot;london&quot; &#125;&#125;</div><div class="line">&#123; &quot;name&quot;: &quot;Mark Thomas&quot;, &quot;dob&quot;: &quot;1982-05-16&quot;, &quot;hobby&quot;: &quot;diving&quot; &#125;</div><div class="line">&#123; &quot;index&quot;: &#123; &quot;_id&quot;: 3, &quot;parent&quot;: &quot;liverpool&quot; &#125;&#125;</div><div class="line">&#123; &quot;name&quot;: &quot;Barry Smith&quot;, &quot;dob&quot;: &quot;1979-04-01&quot;, &quot;hobby&quot;: &quot;hiking&quot; &#125;</div><div class="line">&#123; &quot;index&quot;: &#123; &quot;_id&quot;: 4, &quot;parent&quot;: &quot;paris&quot; &#125;&#125;</div><div class="line">&#123; &quot;name&quot;: &quot;Adrien Grand&quot;, &quot;dob&quot;: &quot;1987-05-11&quot;, &quot;hobby&quot;: &quot;horses&quot; &#125;</div></pre></td></tr></table></figure></p>
+<p>#Finding Parents by Their Children<br>has_child 和 filter 可以根据子文档的内容来查询父文档，例如我们可以用这样的语句搜索所有分公司，出生在1980年以后的员工：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">GET /company/branch/_search</div><div class="line">&#123;</div><div class="line">  &quot;query&quot;: &#123;</div><div class="line">    &quot;has_child&quot;: &#123;</div><div class="line">      &quot;type&quot;: &quot;employee&quot;,</div><div class="line">      &quot;query&quot;: &#123;</div><div class="line">        &quot;range&quot;: &#123;</div><div class="line">          &quot;dob&quot;: &#123;</div><div class="line">            &quot;gte&quot;: &quot;1980-01-01&quot;</div><div class="line">          &#125;</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>has_child 查询会匹配到多个子文档，每个文档都会有不同的关联得分。这些得分如何减少父文档的单个得分取决于分数模型的参数。默认参数为none，即会忽略子文档的得分，并且父文档会加1.0.<br>下面的查询会同时返回london 还有 liverpool 但是london 会得到一个更好的得分，因为Alice Smith 更加匹配london<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">GET /company/branch/_search</div><div class="line">&#123;</div><div class="line">  &quot;query&quot;: &#123;</div><div class="line">    &quot;has_child&quot;: &#123;</div><div class="line">      &quot;type&quot;:       &quot;employee&quot;,</div><div class="line">      &quot;score_mode&quot;: &quot;max&quot;,</div><div class="line">      &quot;query&quot;: &#123;</div><div class="line">        &quot;match&quot;: &#123;</div><div class="line">          &quot;name&quot;: &quot;Alice Smith&quot;</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>##min_children and max_children<br>has_child 和 filter 都有min_children 和 max_children 两个参数，作用是返回那些具有子文档个数与之相匹配的父文档数据<br>下面的查询会返回具有两个员工以上的分公司<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">GET /company/branch/_search</div><div class="line">&#123;</div><div class="line">  &quot;query&quot;: &#123;</div><div class="line">    &quot;has_child&quot;: &#123;</div><div class="line">      &quot;type&quot;:         &quot;employee&quot;,</div><div class="line">      &quot;min_children&quot;: 2, </div><div class="line">      &quot;query&quot;: &#123;</div><div class="line">        &quot;match_all&quot;: &#123;&#125;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>#Finding Children by Their Parents<br>和nested 查询只能返回根节点数据不同的是，父文档和子文档都是相对独立的，并且可以被单独查询，has_child 查询可以根据子文档返回父文档 而 has_parent查询会根据父文档返回子文档<br>和has_child 查询很相似，下面的查询会返回那些工作在uk的员工<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">GET /company/employee/_search</div><div class="line">&#123;</div><div class="line">  &quot;query&quot;: &#123;</div><div class="line">    &quot;has_parent&quot;: &#123;</div><div class="line">      &quot;type&quot;: &quot;branch&quot;, </div><div class="line">      &quot;query&quot;: &#123;</div><div class="line">        &quot;match&quot;: &#123;</div><div class="line">          &quot;country&quot;: &quot;UK&quot;</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>has_parent 查询也支持score_mode模式，但是它只有两种设置none(默认)和score，每个子文档可以只拥有一个父文档，所以就没有必要将分数分给多个子文档了，这仅仅取决于你使用none还是score模式了</p>
+<p>#Children Aggregation<br>Parent-child 支持<a href="http://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket-children-aggregation.html" target="_blank" rel="external">children aggregation</a> parent aggregation 是不支持的<br>下面的例子示范了我们分析了员工的兴趣<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">GET /company/branch/_search</div><div class="line">&#123;</div><div class="line">  &quot;size&quot; : 0,</div><div class="line">  &quot;aggs&quot;: &#123;</div><div class="line">    &quot;country&quot;: &#123;</div><div class="line">      &quot;terms&quot;: &#123; </div><div class="line">        &quot;field&quot;: &quot;country&quot;</div><div class="line">      &#125;,</div><div class="line">      &quot;aggs&quot;: &#123;</div><div class="line">        &quot;employees&quot;: &#123;</div><div class="line">          &quot;children&quot;: &#123; </div><div class="line">            &quot;type&quot;: &quot;employee&quot;</div><div class="line">          &#125;,</div><div class="line">          &quot;aggs&quot;: &#123;</div><div class="line">            &quot;hobby&quot;: &#123;</div><div class="line">              &quot;terms&quot;: &#123; </div><div class="line">                &quot;field&quot;: &quot;hobby&quot;</div><div class="line">              &#125;</div><div class="line">            &#125;</div><div class="line">          &#125;</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>#Grandparents and Grandchildren<br>parent-child 关系不仅仅可以有两代，他可以具有多代关系，但是所有关联的数据都必须分到同一个shard中去。<br>我们稍微修改下之前的列子，叫county 成为branch 的父文档<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">PUT /company</div><div class="line">&#123;</div><div class="line">  &quot;mappings&quot;: &#123;</div><div class="line">    &quot;country&quot;: &#123;&#125;,</div><div class="line">    &quot;branch&quot;: &#123;</div><div class="line">      &quot;_parent&quot;: &#123;</div><div class="line">        &quot;type&quot;: &quot;country&quot; </div><div class="line">      &#125;</div><div class="line">    &#125;,</div><div class="line">    &quot;employee&quot;: &#123;</div><div class="line">      &quot;_parent&quot;: &#123;</div><div class="line">        &quot;type&quot;: &quot;branch&quot; </div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>Countries and branches  只是简单的父子关系，所以我们用相同的方式来创建索引数据<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">POST /company/country/_bulk</div><div class="line">&#123; &quot;index&quot;: &#123; &quot;_id&quot;: &quot;uk&quot; &#125;&#125;</div><div class="line">&#123; &quot;name&quot;: &quot;UK&quot; &#125;</div><div class="line">&#123; &quot;index&quot;: &#123; &quot;_id&quot;: &quot;france&quot; &#125;&#125;</div><div class="line">&#123; &quot;name&quot;: &quot;France&quot; &#125;</div><div class="line"></div><div class="line">POST /company/branch/_bulk</div><div class="line">&#123; &quot;index&quot;: &#123; &quot;_id&quot;: &quot;london&quot;, &quot;parent&quot;: &quot;uk&quot; &#125;&#125;</div><div class="line">&#123; &quot;name&quot;: &quot;London Westmintster&quot; &#125;</div><div class="line">&#123; &quot;index&quot;: &#123; &quot;_id&quot;: &quot;liverpool&quot;, &quot;parent&quot;: &quot;uk&quot; &#125;&#125;</div><div class="line">&#123; &quot;name&quot;: &quot;Liverpool Central&quot; &#125;</div><div class="line">&#123; &quot;index&quot;: &#123; &quot;_id&quot;: &quot;paris&quot;, &quot;parent&quot;: &quot;france&quot; &#125;&#125;</div><div class="line">&#123; &quot;name&quot;: &quot;Champs Élysées&quot; &#125;</div></pre></td></tr></table></figure></p>
+<p>parent id 保证了每个branch和他们的父文档都被分配到了同一个shard中了，<br>如果和之前一样，我们来创建employee 数据，会发生什么？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">PUT /company/employee/1?parent=london</div><div class="line">&#123;</div><div class="line">  &quot;name&quot;:  &quot;Alice Smith&quot;,</div><div class="line">  &quot;dob&quot;:   &quot;1970-10-24&quot;,</div><div class="line">  &quot;hobby&quot;: &quot;hiking&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>shard 会根据文档的parent ID—london 来分配employee 文档，但是这个london 文档会根据他的parent id uk来分配，所以employee文档和country、branch 很有可能被分配到不同的shard中。<br>所以我们需要一个额外的参数routing保证所有关联的文档被分配到同一个shard中。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">PUT /company/employee/1?parent=london&amp;routing=uk </div><div class="line">&#123;</div><div class="line">  &quot;name&quot;:  &quot;Alice Smith&quot;,</div><div class="line">  &quot;dob&quot;:   &quot;1970-10-24&quot;,</div><div class="line">  &quot;hobby&quot;: &quot;hiking&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>parent 参数仍然用于子文档和父文档的关联，routing 参数是用于保证文档被分配到哪个shard中去<br>查询和聚合对于多级的文档也仍然有效，例如：问了找到哪些城市的员工喜欢hiking<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">GET /company/country/_search</div><div class="line">&#123;</div><div class="line">  &quot;query&quot;: &#123;</div><div class="line">    &quot;has_child&quot;: &#123;</div><div class="line">      &quot;type&quot;: &quot;branch&quot;,</div><div class="line">      &quot;query&quot;: &#123;</div><div class="line">        &quot;has_child&quot;: &#123;</div><div class="line">          &quot;type&quot;: &quot;employee&quot;,</div><div class="line">          &quot;query&quot;: &#123;</div><div class="line">            &quot;match&quot;: &#123;</div><div class="line">              &quot;hobby&quot;: &quot;hiking&quot;</div><div class="line">            &#125;</div><div class="line">          &#125;</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/17/hello-world/" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/17/查找占用cpu最高的线程/" rel="prev" title="查找占用cpu最高的线程">
+                查找占用cpu最高的线程 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Inhaltsverzeichnis
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Übersicht
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="John Doe" />
+          <p class="site-author-name" itemprop="name">John Doe</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">Artikel</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Parent-Child-RelationShip"><span class="nav-number">1.</span> <span class="nav-text">Parent-Child RelationShip</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">
+    Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a>
+  </div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">
+    Theme &mdash;
+    <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+      NexT.Muse
+    </a>
+  </div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
